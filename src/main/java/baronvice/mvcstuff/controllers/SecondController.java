@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("bad-page")
+@RequestMapping("my-first-pages/bad-page")
 public class SecondController {
     @GetMapping("/exit")
     public String exitPage(){
