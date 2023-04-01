@@ -13,12 +13,12 @@ public class PersonDAO {
     {
         people = new TreeMap<>(
                 Map.ofEntries(
-                        Map.entry("bv@duck.com",
-                                new Person("bv@duck.com","Baron","Vice")),
-                        Map.entry("toni.sas.228@mail.ru",
-                                new Person("toni.sas.228@mail.ru", "Tony", "L")),
-                        Map.entry("maestrovice@duck.com",
-                                new Person("maestrovice@duck.com", "Maestro", "Vice"))
+                        Map.entry("BaronVice",
+                                new Person("BaronVice","Baron","Vice")),
+                        Map.entry("LV",
+                                new Person("LV", "Tony", "L")),
+                        Map.entry("Maestro1337",
+                                new Person("Maestro1337", "Maestro", "Vice"))
                 )
         );
     }
@@ -27,15 +27,26 @@ public class PersonDAO {
         return people;
     }
 
-    public Person show(String email){
-        return people.get(email);
+    public Person show(String nickname){
+        return people.get(nickname);
     }
 
     public void save(Person person) throws RuntimeException{
-        if (people.containsKey(person.getEmail()))
-            throw new RuntimeException("email is already used");
+        if (people.containsKey(person.getNickname()))
+            throw new RuntimeException("nickname is already used");
 
         // also add regex for mail validation
-        people.put(person.getEmail(), person);
+        people.put(person.getNickname(), person);
+    }
+
+    public void update(String nickname, Person person){
+        // I'm not sure, but probably getting person with show and updating it more correct than this
+        // If id existed, then shouldn't be worried with remove
+        delete(nickname);
+        people.put(person.getNickname(), person);
+    }
+
+    public void delete(String nickname){
+        people.remove(nickname);
     }
 }

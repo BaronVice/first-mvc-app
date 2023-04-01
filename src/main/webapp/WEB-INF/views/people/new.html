@@ -6,16 +6,17 @@
 </head>
 <body>
     <!-- When submit button is clicked - it will send post action to create person -->
-    <form th:method="POST" th:action="@{/people/create}" th:object="${person}">
-        <label for="name">Name: </label>
-        <input type="text" th:field="*{name}" id="name"/>
+    <form th:method="POST" th:action="@{/people}" th:object="${person}">
+        <label for="name">Nickname: </label>
+        <input type="text" th:field="*{nickname}" id="name"/>
         <br/>
-        <label for="surname">Surname: </label>
-        <input type="text" th:field="*{surname}" id="surname"/>
+        <label for="surname">Name: </label>
+        <input type="text" th:field="*{name}" id="surname"/>
         <br/>
-        <label for="email">Email: </label>
-        <input type="text" th:field="*{email}" id="email"/>
+        <label for="email">Surname: </label>
+        <input type="text" th:field="*{surname}" id="email"/>
         <br/>
+        <hr/>
         <input type="submit" value="Create!"/>
     </form>
 </body>

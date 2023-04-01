@@ -23,12 +23,11 @@ public class PeopleController {
         return "people/index";
     }
 
-    @GetMapping("/{email}/")
-    public String show(@PathVariable("email") String email,
+    @GetMapping("/{nickname}")
+    public String show(@PathVariable("nickname") String nickname,
                        Model model){
         // Get person from DAO and present it in view
-        System.out.println(email);
-        Person person = personDAO.show(email);
+        Person person = personDAO.show(nickname);
         model.addAttribute("person", person == null ?
                 // That's kinda lame, better option is to send message. Sadly, I'm not frontend dev
                 new Person("Sorry,", "but...", "Not found") : person);
@@ -42,7 +41,15 @@ public class PeopleController {
         return "people/new";
     }
 
-    @PostMapping("/create")
+    @GetMapping("/{nickname}/edit")
+    public String sendEditPage(@PathVariable("nickname") String nickname,
+                       Model model){
+        model.addAttribute("person", personDAO.show(nickname));
+
+        return "people/edit";
+    }
+
+    @PostMapping()
     // This person is caught from page which sends post request here (/people/create)
     public String create(@ModelAttribute("person") Person person){
         try{
@@ -50,6 +57,21 @@ public class PeopleController {
         } catch (RuntimeException e){
             // I don't know yet how to handle it
         }
+
+        return "redirect:/people";
+    }
+
+    @PatchMapping("/{nickname}")
+    public String edit(@ModelAttribute("person") Person person,
+                       @PathVariable("nickname") String nickname){
+        personDAO.update(nickname,person);
+
+        return String.format("redirect:/people/%s", person.getNickname());
+    }
+
+    @DeleteMapping("/{nickname}")
+    public String delete(@PathVariable("nickname") String nickname){
+        personDAO.delete(nickname);
 
         return "redirect:/people";
     }

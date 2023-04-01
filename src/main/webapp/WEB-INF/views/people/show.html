@@ -6,9 +6,25 @@
 </head>
 <body>
     <!-- But what if not found? -->
-    <p th:text="${person.getEmail()}">VALUE</p>
+    <p th:text="${person.getNickname()}">VALUE</p>
     <p th:text="${person.getName()}">VALUE</p>
     <p th:text="${person.getSurname()}">VALUE</p>
-    <a href="/people">Go back</a>
+    <hr/>
+
+    <form th:action="@{/people/{nickname}/edit(nickname=${person.getNickname()})}">
+        <input type="submit" value="Edit"/>
+    </form>
+
+    <br/>
+
+    <form th:method="DELETE" th:action="@{/people/{nickname}(nickname=${person.getNickname()})}">
+        <input type="submit" value="Delete?"/>
+    </form>
+
+    <hr/>
+
+    <form th:action="@{/people}">
+        <input type="submit" value="Go back"/>
+    </form>
 </body>
 </html>
