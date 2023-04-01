@@ -5,7 +5,10 @@
     <title>Person</title>
 </head>
 <body>
-<p th:text="${person.getName()}">VALUE</p>
-<p th:text="${person.getId()}">VALUE</p>
+    <!-- But what if not found? -->
+    <p th:text="${person.getEmail()}">VALUE</p>
+    <p th:text="${person.getName()}">VALUE</p>
+    <p th:text="${person.getSurname()}">VALUE</p>
+    <a href="/people">Go back</a>
 </body>
 </html>

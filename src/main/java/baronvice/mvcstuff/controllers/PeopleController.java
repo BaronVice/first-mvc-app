@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/people")
@@ -21,17 +19,38 @@ public class PeopleController {
     public String index(Model model){
         // Get all people from DAO and present them in view
         model.addAttribute("people", personDAO.index());
+
         return "people/index";
     }
 
-    @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id,
+    @GetMapping("/{email}/")
+    public String show(@PathVariable("email") String email,
                        Model model){
         // Get person from DAO and present it in view
-        Person person = personDAO.show(id);
-        model.addAttribute("person", person == null ? "Not found" : person);
+        System.out.println(email);
+        Person person = personDAO.show(email);
+        model.addAttribute("person", person == null ?
+                // That's kinda lame, better option is to send message. Sadly, I'm not frontend dev
+                new Person("Sorry,", "but...", "Not found") : person);
+
         return "people/show";
     }
 
+    @GetMapping("/new")
+    // Here empty person is created and sent to people/new
+    public String sendCreationPage(@ModelAttribute("person") Person person){
+        return "people/new";
+    }
 
+    @PostMapping("/create")
+    // This person is caught from page which sends post request here (/people/create)
+    public String create(@ModelAttribute("person") Person person){
+        try{
+            personDAO.save(person);
+        } catch (RuntimeException e){
+            // I don't know yet how to handle it
+        }
+
+        return "redirect:/people";
+    }
 }

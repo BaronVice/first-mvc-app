@@ -5,8 +5,14 @@
     <title>All people</title>
 </head>
 <body>
+    <!-- Stands for each -->
     <div th:each="person : ${people}">
-        <a th:href="@{/people/{id}(id=${person.getKey()})}" th:text="${person.getValue().getName()}">user</a>
+        <!-- Want to make an url to every mail and text is name + surname -->
+        <a th:href="@{/people/{email}/(email=${person.getKey()})}"
+           th:text="${person.getValue().getName()} ${person.getValue().getSurname()}">user</a>
     </div>
+    <br/>
+
+    <a href="/people/new">Create new person</a>
 </body>
 </html>
