@@ -43,7 +43,7 @@ public class PeopleController {
 
     @GetMapping("/{nickname}/edit")
     public String sendEditPage(@PathVariable("nickname") String nickname,
-                       Model model){
+                               Model model){
         model.addAttribute("person", personDAO.show(nickname));
 
         return "people/edit";
@@ -62,11 +62,11 @@ public class PeopleController {
     }
 
     @PatchMapping("/{nickname}")
-    public String edit(@ModelAttribute("person") Person person,
-                       @PathVariable("nickname") String nickname){
-        personDAO.update(nickname,person);
+    public String edit(@ModelAttribute("person") Person updatedPerson,
+                       @PathVariable("nickname") String previousNickname){
+        personDAO.update(previousNickname, updatedPerson);
 
-        return String.format("redirect:/people/%s", person.getNickname());
+        return String.format("redirect:/people/%s", updatedPerson.getNickname());
     }
 
     @DeleteMapping("/{nickname}")
