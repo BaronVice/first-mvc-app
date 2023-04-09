@@ -1,5 +1,6 @@
 package baronvice.mvcstuff.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -27,18 +28,13 @@ import java.util.Objects;
 })
 // To enable web functions
 @EnableWebMvc
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 /* WebMvcConfigurer is implemented when we want to configure SpringMVC for our needs.
   Instead of using default template we may take thymeleaf template and set it in configureViewResolver */
 public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
     private final Environment environment;
 
-    // Spring will inject context by itself
-    @Autowired
-    public SpringConfig(ApplicationContext applicationContext, Environment environment){
-        this.applicationContext = applicationContext;
-        this.environment = environment;
-    }
 
     // To describe DB (for JdbcTemplate)
     @Bean
