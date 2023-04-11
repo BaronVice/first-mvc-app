@@ -3,10 +3,13 @@ package baronvice.mvcstuff.dao;
 import baronvice.mvcstuff.models.Person;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
 @Component
@@ -68,5 +71,57 @@ public class PersonDAO {
                 "DELETE FROM Person WHERE nickname=?",
                 nickname
         );
+    }
+
+    ///////////////////////////////
+    //// To test brunch update ////
+    ///////////////////////////////
+
+    public void separateUpdate(){
+        List<Person> people = generateThousandPeople();
+
+        long start = System.currentTimeMillis();
+        for (Person person : people)
+            jdbcTemplate.update(
+                    "INSERT INTO PersonTest VALUES (?, ?, ?)",
+                    person.getNickname(),
+                    person.getName(),
+                    person.getSurname()
+            );
+        long end = System.currentTimeMillis();
+
+        System.out.println("Separate update time: " + (end - start));
+    }
+
+    public void batchUpdate(){
+        List<Person> people = generateThousandPeople();
+        long start = System.currentTimeMillis();
+        jdbcTemplate.batchUpdate(
+                "INSERT INTO PersonTest VALUES (?, ?, ?)",
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
+                        preparedStatement.setString(1, people.get(i).getNickname());
+                        preparedStatement.setString(2, people.get(i).getName());
+                        preparedStatement.setString(3, people.get(i).getSurname());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return people.size();
+                    }
+                }
+        );
+        long end = System.currentTimeMillis();
+
+        System.out.println("Batch update time: " + (end - start));
+    }
+
+    private List<Person> generateThousandPeople(){
+        List<Person> people = new ArrayList<>(200);
+        for (int i = 0; i < 200; i++)
+            people.add(i, new Person("User" + i, "Nick" + i, "Name" + i));
+
+        return people;
     }
 }

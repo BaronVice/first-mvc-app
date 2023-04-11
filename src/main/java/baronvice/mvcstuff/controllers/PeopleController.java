@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class PeopleController {
 
-    PersonDAO personDAO;
+    private final PersonDAO personDAO;
 
     @GetMapping()
     public String index(Model model){
