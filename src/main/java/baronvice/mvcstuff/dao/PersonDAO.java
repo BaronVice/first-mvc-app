@@ -52,16 +52,16 @@ public class PersonDAO {
                 "INSERT INTO Person VALUES(?, ?, ?)",
                 person.getNickname(),
                 person.getName(),
-                person.getSurname()
+                person.getEmail()
         );
     }
 
     public void update(String previousNickname, Person updatedPerson){
         jdbcTemplate.update(
-                "UPDATE Person SET nickname=?, name=?, surname=? WHERE nickname=?",
+                "UPDATE Person SET nickname=?, name=?, email=? WHERE nickname=?",
                 updatedPerson.getNickname(),
                 updatedPerson.getName(),
-                updatedPerson.getSurname(),
+                updatedPerson.getEmail(),
                 previousNickname
         );
     }
@@ -86,7 +86,7 @@ public class PersonDAO {
                     "INSERT INTO PersonTest VALUES (?, ?, ?)",
                     person.getNickname(),
                     person.getName(),
-                    person.getSurname()
+                    person.getEmail()
             );
         long end = System.currentTimeMillis();
 
@@ -103,7 +103,7 @@ public class PersonDAO {
                     public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
                         preparedStatement.setString(1, people.get(i).getNickname());
                         preparedStatement.setString(2, people.get(i).getName());
-                        preparedStatement.setString(3, people.get(i).getSurname());
+                        preparedStatement.setString(3, people.get(i).getEmail());
                     }
 
                     @Override

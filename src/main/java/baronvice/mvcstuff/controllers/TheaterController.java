@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/theater")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class TheaterController {
-
+    /**
     private final TheaterDAO theaterDAO;
 
     @GetMapping()
@@ -32,34 +32,34 @@ public class TheaterController {
     }
 
     @GetMapping("/{performanceName}")
-    public String showPerformanceInformation(@PathVariable String performanceName,
+    public String showPerformanceInformation(@PathVariable("performanceName") String performanceName,
                                              Model model){
         model.addAttribute("performance", theaterDAO.getPerformance(performanceName));
         return "theater/show";
     }
 
     @GetMapping("/new-actor")
-    public String showActorCreationPage(@ModelAttribute Actor actor){
+    public String showActorCreationPage(@ModelAttribute("actor") Actor actor){
         return "theater/new-actor";
     }
 
     @GetMapping("/new-producer")
-    public String showProducerCreationPage(@ModelAttribute Producer producer){
+    public String showProducerCreationPage(@ModelAttribute("producer") Producer producer){
         return "theater/new-producer";
     }
 
     @GetMapping("/new-stage-worker")
-    public String showStageWorkerCreationPage(@ModelAttribute StageWorker stageWorker){
+    public String showStageWorkerCreationPage(@ModelAttribute("stageWorker") StageWorker stageWorker){
         return "theater/new-stage-worker";
     }
 
     @GetMapping("/{performanceName}/edit")
-    public String showEditPage(@PathVariable String performanceName,
+    public String showEditPage(@PathVariable("performanceName") String performanceName,
                                Model model){
         model.addAttribute("performance", theaterDAO.getPerformance(performanceName));
         return "theater/edit";
     }
 
 
-
+    **/
 }

@@ -8,7 +8,7 @@
     <!-- But what if not found? -->
     <p th:text="${person.getNickname()}">VALUE</p>
     <p th:text="${person.getName()}">VALUE</p>
-    <p th:text="${person.getSurname()}">VALUE</p>
+    <p th:text="${person.getEmail()}">VALUE</p>
     <hr/>
 
     <form th:action="@{/people/{nickname}/edit(nickname=${person.getNickname()})}">

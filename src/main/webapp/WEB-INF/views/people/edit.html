@@ -7,14 +7,17 @@
 <body>
 <!-- When submit button is clicked - it will send post action to update person -->
 <form th:method="PATCH" th:action="@{/people/{nickname}(nickname=${person.getNickname()})}" th:object="${person}">
-    <label for="name">Nickname: </label>
-    <input type="text" th:field="*{nickname}" id="name"/>
+    <label for="nickname">Nickname: </label>
+    <input type="text" th:field="*{nickname}" id="nickname"/>
+    <div style="color: red" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname error</div>
     <br/>
-    <label for="surname">Name: </label>
-    <input type="text" th:field="*{name}" id="surname"/>
+    <label for="name">Name: </label>
+    <input type="text" th:field="*{name}" id="name"/>
+    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
     <br/>
-    <label for="email">Surname: </label>
-    <input type="text" th:field="*{surname}" id="email"/>
+    <label for="email">Email: </label>
+    <input type="text" th:field="*{email}" id="email"/>
+    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
     <br/>
     <hr/>
     <input type="submit" value="Edit!"/>
