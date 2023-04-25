@@ -2,6 +2,7 @@ package baronvice.mvcstuff.controllers;
 
 import baronvice.mvcstuff.dao.PersonDAO;
 import baronvice.mvcstuff.models.Person;
+import baronvice.mvcstuff.util.PersonValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 public class PeopleController {
 
     private final PersonDAO personDAO;
+    private final PersonValidator personValidator;
 
     @GetMapping()
     public String index(Model model){
@@ -31,10 +33,10 @@ public class PeopleController {
                        Model model){
         // TODO: th:id
         // Get person from DAO and present it in view
-        Person person = personDAO.show(nickname);
+        Person person = personDAO.showByNickname(nickname);
         model.addAttribute("person", person == null ?
                 // That's kinda lame, better option is to send message. Sadly, I'm not frontend dev
-                new Person("Sorry,", "but...", "Not found") : person);
+                new Person("Sorry,", "but", "not", "found") : person);
 
         return "/people/show";
     }
@@ -48,7 +50,7 @@ public class PeopleController {
     @GetMapping("/{nickname}/edit")
     public String sendEditPage(@PathVariable("nickname") String nickname,
                                Model model){
-        model.addAttribute("person", personDAO.show(nickname));
+        model.addAttribute("person", personDAO.showByNickname(nickname));
         return "/people/edit";
     }
 
@@ -56,6 +58,8 @@ public class PeopleController {
     // This person is caught from page which sends post request here (/people/create)
     public String create(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult){
+        personValidator.validate(person, bindingResult);
+
         if (bindingResult.hasErrors())
             return "/people/new";
 
@@ -67,7 +71,8 @@ public class PeopleController {
     public String edit(@ModelAttribute("person") @Valid Person updatedPerson,
                        BindingResult bindingResult,
                        @PathVariable("nickname") String previousNickname){
-        System.out.println(bindingResult.hasErrors());
+        personValidator.validate(updatedPerson, bindingResult);
+
         if (bindingResult.hasErrors())
             return "/people/edit";
 

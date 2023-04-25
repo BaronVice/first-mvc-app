@@ -35,7 +35,7 @@ public class PersonDAO {
         );
     }
 
-    public Person show(String nickname){
+    public Person showByNickname(String nickname){
         // JdbcTemplate apply PreparedStatement by default
         // Second argument - array of values that will be placed inside '?'
         // jdbcTemplate.query returns List
@@ -47,21 +47,31 @@ public class PersonDAO {
         ).stream().findAny().orElse(null);
     }
 
+    public Optional<Person> showByEmail(String email){
+        return jdbcTemplate.query(
+                "SELECT * FROM Person WHERE email=?",
+                new Object[]{email},
+                new BeanPropertyRowMapper<>(Person.class)
+        ).stream().findAny();
+    }
+
     public void save(Person person) throws RuntimeException{
         jdbcTemplate.update(
-                "INSERT INTO Person VALUES(?, ?, ?)",
+                "INSERT INTO Person VALUES(?, ?, ?, ?)",
                 person.getNickname(),
                 person.getName(),
-                person.getEmail()
+                person.getEmail(),
+                person.getAddress()
         );
     }
 
     public void update(String previousNickname, Person updatedPerson){
         jdbcTemplate.update(
-                "UPDATE Person SET nickname=?, name=?, email=? WHERE nickname=?",
+                "UPDATE Person SET nickname=?, name=?, email=?, address=? WHERE nickname=?",
                 updatedPerson.getNickname(),
                 updatedPerson.getName(),
                 updatedPerson.getEmail(),
+                updatedPerson.getAddress(),
                 previousNickname
         );
     }
@@ -83,10 +93,11 @@ public class PersonDAO {
         long start = System.currentTimeMillis();
         for (Person person : people)
             jdbcTemplate.update(
-                    "INSERT INTO PersonTest VALUES (?, ?, ?)",
+                    "INSERT INTO PersonTest VALUES (?, ?, ?, ?)",
                     person.getNickname(),
                     person.getName(),
-                    person.getEmail()
+                    person.getEmail(),
+                    person.getAddress()
             );
         long end = System.currentTimeMillis();
 
@@ -97,13 +108,14 @@ public class PersonDAO {
         List<Person> people = generateThousandPeople();
         long start = System.currentTimeMillis();
         jdbcTemplate.batchUpdate(
-                "INSERT INTO PersonTest VALUES (?, ?, ?)",
+                "INSERT INTO PersonTest VALUES (?, ?, ?, ?)",
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
                         preparedStatement.setString(1, people.get(i).getNickname());
                         preparedStatement.setString(2, people.get(i).getName());
                         preparedStatement.setString(3, people.get(i).getEmail());
+                        preparedStatement.setString(4, people.get(i).getAddress());
                     }
 
                     @Override
@@ -117,10 +129,11 @@ public class PersonDAO {
         System.out.println("Batch update time: " + (end - start));
     }
 
+    @Deprecated
     private List<Person> generateThousandPeople(){
         List<Person> people = new ArrayList<>(200);
         for (int i = 0; i < 200; i++)
-            people.add(i, new Person("User" + i, "Nick" + i, "Name" + i));
+            people.add(i, new Person("User" + i, "Nick" + i, "Name" + i, "Address" + ""));
 
         return people;
     }

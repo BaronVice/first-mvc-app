@@ -2,6 +2,7 @@ package baronvice.mvcstuff.models;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,4 +21,7 @@ public class Person {
     @NotEmpty(message = "Email should not be empty")
     @Email
     private String email;
+    // Country, City, Index
+    @Pattern(regexp = "[A-Z]\\w{3,55}, [A-Z]\\w{0,84}, \\d{6}", message = "Incorrect address format")
+    private String address;
 }
